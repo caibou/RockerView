@@ -15,7 +15,7 @@ import android.view.View;
 /**
  * @author caibou
  */
-public class JoystickView extends View {
+public class RockerView extends View {
 
     private static final String TAG = "GameButton";
     private static final int SIDE_LENGTH = 400;
@@ -34,15 +34,15 @@ public class JoystickView extends View {
 
     private float rockerX, rockerY;
 
-    public JoystickView(Context context) {
+    public RockerView(Context context) {
         this(context, null);
     }
 
-    public JoystickView(Context context, @Nullable AttributeSet attrs) {
+    public RockerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public JoystickView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RockerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
