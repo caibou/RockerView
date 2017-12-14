@@ -1,6 +1,7 @@
-package me.caibou.joystickview;
+package me.caibou.rockerview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Region;
@@ -29,7 +30,7 @@ public abstract class RockerView extends View {
 
     public RockerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialize();
+        initialize(context, attrs);
     }
 
     /**
@@ -41,8 +42,12 @@ public abstract class RockerView extends View {
         return new Point(centerPoint);
     }
 
-    private void initialize() {
-        radius = radius();
+    private void initialize(Context context, @Nullable AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RockerView);
+        if (typedArray != null){
+            radius = typedArray.getInt(R.styleable.RockerView_edge_radius, 200);
+            typedArray.recycle();
+        }
         centerPoint.x = radius;
         centerPoint.y = radius;
         initialTouchRange();
@@ -88,7 +93,7 @@ public abstract class RockerView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int sideLength = radius() * 2;
+        int sideLength = radius * 2;
         setMeasuredDimension(sideLength, sideLength);
     }
 
@@ -122,10 +127,4 @@ public abstract class RockerView extends View {
      */
     protected void actionUp(float x, float y, double angle) { }
 
-    /**
-     * Return the radius of the circle.
-     *
-     * @return The radius of the circle.
-     */
-    public abstract int radius();
 }

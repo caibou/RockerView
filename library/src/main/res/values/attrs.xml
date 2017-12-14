@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RockerView">
+        <attr name="edge_radius" format="integer"/>
+    </declare-styleable>
+    <declare-styleable name="JoystickView">
+        <attr name="edge_radius"/>
+        <attr name="stick_radius" format="integer" />
+        <attr name="stick_color" format="color" />
+    </declare-styleable>
+</resources>

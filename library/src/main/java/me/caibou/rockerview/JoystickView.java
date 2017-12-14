@@ -1,6 +1,7 @@
-package me.caibou.joystickview;
+package me.caibou.rockerview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,11 +14,11 @@ import android.util.AttributeSet;
 /**
  * @author caibou
  */
-public class JoystickView extends RockerView{
+public class JoystickView extends RockerView {
 
-    private static final int EDGE_RADIUS = 200;
-    private static final int BALL_RADIUS = EDGE_RADIUS / 2;
-    private static final int DR = EDGE_RADIUS - BALL_RADIUS;
+    private final int EDGE_RADIUS;
+    private final int STICK_RADIUS;
+    private final int DR;
 
     private Region ballRegion = new Region();
     private Path stickEdgePath = new Path();
@@ -27,6 +28,8 @@ public class JoystickView extends RockerView{
 
     private Point center;
     private float stickX, stickY;
+
+    private int stickBallColor;
 
     public JoystickView(Context context) {
         this(context, null);
@@ -38,6 +41,16 @@ public class JoystickView extends RockerView{
 
     public JoystickView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.JoystickView);
+
+        EDGE_RADIUS = typedArray.getInt(R.styleable.JoystickView_edge_radius, 200);
+        STICK_RADIUS = typedArray.getInt(R.styleable.JoystickView_stick_radius, EDGE_RADIUS / 2);
+        stickBallColor = typedArray.getColor(R.styleable.JoystickView_stick_color, Color.parseColor("#97f5964d"));
+        DR = EDGE_RADIUS - STICK_RADIUS;
+        typedArray.recycle();
+
+
         center = centerPoint();
         stickX = center.x;
         stickY = center.y;
@@ -71,14 +84,14 @@ public class JoystickView extends RockerView{
 
     protected void drawStickBall(Canvas canvas) {
         stickBallPath.reset();
-        stickBallPath.addCircle(stickX, stickY, BALL_RADIUS, Path.Direction.CW);
+        stickBallPath.addCircle(stickX, stickY, STICK_RADIUS, Path.Direction.CW);
         paint.reset();
-        paint.setColor(Color.parseColor("#97f5964d"));
+        paint.setColor(stickBallColor);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPath(stickBallPath, paint);
     }
 
-    private void updateStick(float x, float y) {
+    private void updateStickPos(float x, float y) {
         if (ballRegion.contains((int) x, (int) y)) {
             stickX = x;
             stickY = y;
@@ -92,29 +105,25 @@ public class JoystickView extends RockerView{
         invalidate();
     }
 
-    @Override
-    protected void actionDown(float x, float y, double angle) {
-        updateStick(x, y);
-    }
-
-    @Override
-    protected void actionMove(float x, float y, double angle) {
-        updateStick(x, y);
-    }
-
-    @Override
-    protected void actionUp(float x, float y, double angle) {
-        resetRocker();
-    }
-
-    private void resetRocker() {
+    private void resetStick() {
         stickX = center.x;
         stickY = center.y;
         invalidate();
     }
 
     @Override
-    public int radius() {
-        return EDGE_RADIUS;
+    protected void actionDown(float x, float y, double angle) {
+        updateStickPos(x, y);
     }
+
+    @Override
+    protected void actionMove(float x, float y, double angle) {
+        updateStickPos(x, y);
+    }
+
+    @Override
+    protected void actionUp(float x, float y, double angle) {
+        resetStick();
+    }
+
 }
