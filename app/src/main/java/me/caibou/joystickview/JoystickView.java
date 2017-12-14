@@ -9,14 +9,11 @@ import android.graphics.Point;
 import android.graphics.Region;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * @author caibou
  */
 public class JoystickView extends RockerView{
-
-    private static final String TAG = "JoystickView";
 
     private static final int EDGE_RADIUS = 200;
     private static final int BALL_RADIUS = EDGE_RADIUS / 2;
@@ -59,7 +56,7 @@ public class JoystickView extends RockerView{
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(Color.TRANSPARENT);
         drawRockerEdge(canvas);
-        drawRockerBall(canvas);
+        drawStickBall(canvas);
     }
 
     protected void drawRockerEdge(Canvas canvas) {
@@ -72,7 +69,7 @@ public class JoystickView extends RockerView{
         canvas.drawPath(stickEdgePath, paint);
     }
 
-    protected void drawRockerBall(Canvas canvas) {
+    protected void drawStickBall(Canvas canvas) {
         stickBallPath.reset();
         stickBallPath.addCircle(stickX, stickY, BALL_RADIUS, Path.Direction.CW);
         paint.reset();
@@ -81,7 +78,7 @@ public class JoystickView extends RockerView{
         canvas.drawPath(stickBallPath, paint);
     }
 
-    private void updateRocker(float x, float y) {
+    private void updateStick(float x, float y) {
         if (ballRegion.contains((int) x, (int) y)) {
             stickX = x;
             stickY = y;
@@ -97,12 +94,12 @@ public class JoystickView extends RockerView{
 
     @Override
     protected void actionDown(float x, float y, double angle) {
-        updateRocker(x, y);
+        updateStick(x, y);
     }
 
     @Override
     protected void actionMove(float x, float y, double angle) {
-        updateRocker(x, y);
+        updateStick(x, y);
     }
 
     @Override

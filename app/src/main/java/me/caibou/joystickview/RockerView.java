@@ -32,6 +32,11 @@ public abstract class RockerView extends View {
         initialize();
     }
 
+    /**
+     * Return the center point of the circle.
+     *
+     * @return The center point of the circle
+     */
     public Point centerPoint() {
         return new Point(centerPoint);
     }
@@ -51,13 +56,17 @@ public abstract class RockerView extends View {
         edgeRegion.setPath(edgeRulePath, globalRegion);
     }
 
+    private double calculateAngle(float dx, float dy) {
+        double degrees = Math.toDegrees(Math.atan2(dy, dx));
+        return degrees < 0 ? degrees + 360 : degrees;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
-        double degrees = Math.toDegrees(Math.atan2(y - centerPoint.y, x - centerPoint.x));
-        double angle = degrees < 0 ? degrees + 360 : degrees;
+        double angle = calculateAngle(y - centerPoint.y, x - centerPoint.x);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 if (edgeRegion.contains((int) x, (int) y)) {
@@ -83,14 +92,40 @@ public abstract class RockerView extends View {
         setMeasuredDimension(sideLength, sideLength);
     }
 
+    /**
+     * Notify the View the current event information of the action down
+     *
+     * @param x     The event's x coordinate
+     * @param y     The event's y coordinate
+     * @param angle The angle of the touch point relative to the center of the circle.
+     *              represented by an double between 0 and 359.
+     */
     protected void actionDown(float x, float y, double angle) { }
 
+    /**
+     * Notify the View the current event information of the action move
+     *
+     * @param x     The event's x coordinate
+     * @param y     The event's y coordinate
+     * @param angle The angle of the touch point relative to the center of the circle.
+     *              represented by an double between 0 and 359.
+     */
     protected void actionMove(float x, float y, double angle) { }
 
+    /**
+     * Notify the View the current event information of the action up or cancel
+     *
+     * @param x     The event's x coordinate
+     * @param y     The event's y coordinate
+     * @param angle The angle of the touch point relative to the center of the circle.
+     *              represented by an double between 0 and 359.
+     */
     protected void actionUp(float x, float y, double angle) { }
 
     /**
-     * @return
+     * Return the radius of the circle.
+     *
+     * @return The radius of the circle.
      */
     public abstract int radius();
 }
