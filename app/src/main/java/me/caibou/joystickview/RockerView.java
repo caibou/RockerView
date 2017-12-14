@@ -32,7 +32,7 @@ public abstract class RockerView extends View {
         initialize();
     }
 
-    public Point centerPoint(){
+    public Point centerPoint() {
         return new Point(centerPoint);
     }
 
@@ -56,7 +56,8 @@ public abstract class RockerView extends View {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
-        double angle = Math.atan2(y, x);
+        double degrees = Math.toDegrees(Math.atan2(y - centerPoint.y, x - centerPoint.x));
+        double angle = degrees < 0 ? degrees + 360 : degrees;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 if (edgeRegion.contains((int) x, (int) y)) {
@@ -82,14 +83,11 @@ public abstract class RockerView extends View {
         setMeasuredDimension(sideLength, sideLength);
     }
 
-    protected void actionDown(float x, float y, double angle) {
-    }
+    protected void actionDown(float x, float y, double angle) { }
 
-    protected void actionMove(float x, float y, double angle) {
-    }
+    protected void actionMove(float x, float y, double angle) { }
 
-    protected void actionUp(float x, float y, double angle) {
-    }
+    protected void actionUp(float x, float y, double angle) { }
 
     /**
      * @return

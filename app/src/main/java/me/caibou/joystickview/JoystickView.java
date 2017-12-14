@@ -9,11 +9,14 @@ import android.graphics.Point;
 import android.graphics.Region;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * @author caibou
  */
 public class JoystickView extends RockerView{
+
+    private static final String TAG = "JoystickView";
 
     private static final int EDGE_RADIUS = 200;
     private static final int BALL_RADIUS = EDGE_RADIUS / 2;
