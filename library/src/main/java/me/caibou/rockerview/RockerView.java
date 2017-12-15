@@ -15,6 +15,10 @@ import android.view.View;
  */
 public abstract class RockerView extends View {
 
+    public static final int ACTION_PRESSED = 1;
+    public static final int ACTION_MOVE = 0;
+    public static final int ACTION_RELEASE = -1;
+
     private Region edgeRegion = new Region();
 
     private Point centerPoint = new Point();
@@ -30,27 +34,17 @@ public abstract class RockerView extends View {
 
     public RockerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialize(context, attrs);
+        initializeData(context, attrs);
+        initialTouchRange();
     }
 
-    /**
-     * Return the center point of the circle.
-     *
-     * @return The center point of the circle
-     */
-    public Point centerPoint() {
-        return new Point(centerPoint);
-    }
-
-    private void initialize(Context context, @Nullable AttributeSet attrs) {
+    private void initializeData(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RockerView);
-        if (typedArray != null){
-            radius = typedArray.getInt(R.styleable.RockerView_edge_radius, 200);
-            typedArray.recycle();
-        }
+        radius = typedArray.getInt(R.styleable.RockerView_edge_radius, 200);
+        typedArray.recycle();
+
         centerPoint.x = radius;
         centerPoint.y = radius;
-        initialTouchRange();
     }
 
     private void initialTouchRange() {
@@ -71,7 +65,7 @@ public abstract class RockerView extends View {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
-        double angle = calculateAngle(y - centerPoint.y, x - centerPoint.x);
+        double angle = calculateAngle(x - centerPoint.x, y - centerPoint.y);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 if (edgeRegion.contains((int) x, (int) y)) {
@@ -96,6 +90,13 @@ public abstract class RockerView extends View {
         int sideLength = radius * 2;
         setMeasuredDimension(sideLength, sideLength);
     }
+
+    /**
+     * Return the center point of the circle.
+     *
+     * @return The center point of the circle
+     */
+    public Point centerPoint() { return new Point(centerPoint); }
 
     /**
      * Notify the View the current event information of the action down

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JoystickView</string>
+    <string name="angle">%1$.0f°</string>
 </resources>
