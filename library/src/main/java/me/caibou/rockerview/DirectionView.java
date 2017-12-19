@@ -1,6 +1,7 @@
 package me.caibou.rockerview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,22 +19,29 @@ public class DirectionView extends RockerView {
     private static final int INSIDE_CIRCLE = 30;
     private static final int INDICATOR_SWEEP_ANGLE = 90;
 
+    public enum Direction {
+        NONE, UP, DOWN, LEFT, RIGHT,
+        UP_AND_LEFT, UP_AND_RIGHT, DOWN_AND_LEFT, DOWN_AND_RIGHT
+    }
+
+    private boolean pressedStatus = false;
     private int sideLength;
     private int inSideLength;
     private int turnPosLength;
     private int edgeRadius;
-    private int buttonRadius;
+
     private float startAngle = 337.5f;
+    private int indicatorColor;
 
     private Point centerPoint = new Point();
 
     private Paint paint = new Paint();
-
     private Path edgePath = new Path();
     private Path directPath = new Path();
     private Path indicatorPath = new Path();
     private RectF indicatorRectF = new RectF();
-    private boolean pressedStatus = false;
+
+    private DirectionChangeListener directionChangeListener;
 
     public DirectionView(Context context) {
         this(context, null);
@@ -49,9 +57,13 @@ public class DirectionView extends RockerView {
     }
 
     private void initializeData(Context context, AttributeSet attrs) {
-        edgeRadius = 200;
-        buttonRadius = 180;
-        sideLength = 120;
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DirectionView);
+        edgeRadius = typedArray.getInt(R.styleable.DirectionView_edge_radius, 200);
+        int buttonRadius = typedArray.getInt(R.styleable.DirectionView_button_outside_circle_radius, 180);
+        sideLength = typedArray.getInt(R.styleable.DirectionView_button_side_width, 120);
+        indicatorColor = typedArray.getColor(R.styleable.DirectionView_indicator_color, Color.GREEN);
+        typedArray.recycle();
+
         inSideLength = (int) Math.sqrt(Math.pow(buttonRadius, 2) - Math.pow(sideLength / 2, 2));
         turnPosLength = inSideLength - sideLength / 2;
 
@@ -67,7 +79,7 @@ public class DirectionView extends RockerView {
         canvas.drawColor(Color.TRANSPARENT);
         drawEdge(canvas);
         drawDirectButton(canvas);
-        if (pressedStatus){
+        if (pressedStatus) {
             drawIndicator(canvas);
         }
 
@@ -113,7 +125,7 @@ public class DirectionView extends RockerView {
 
     protected void drawIndicator(Canvas canvas) {
         paint.reset();
-        paint.setColor(Color.GREEN);
+        paint.setColor(indicatorColor);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
 
@@ -136,6 +148,7 @@ public class DirectionView extends RockerView {
     @Override
     protected void actionUp(float x, float y, double angle) {
         resetIndicator();
+        notifyDirection(Direction.NONE);
     }
 
     private void resetIndicator() {
@@ -146,22 +159,36 @@ public class DirectionView extends RockerView {
     private void updateIndicator(double angle) {
         if (range(angle, 337.5, 360) || range(angle, 0, 22.5)) {
             startAngle = 315.0f;
+            notifyDirection(Direction.RIGHT);
         } else if (range(angle, 22.5, 67.5)) {
             startAngle = 0.0f;
+            notifyDirection(Direction.DOWN_AND_RIGHT);
         } else if (range(angle, 67.5, 112.5)) {
             startAngle = 45.0f;
+            notifyDirection(Direction.DOWN);
         } else if (range(angle, 112.5, 157.5)) {
             startAngle = 90.0f;
+            notifyDirection(Direction.DOWN_AND_LEFT);
         } else if (range(angle, 157.5, 202.5)) {
             startAngle = 135.0f;
+            notifyDirection(Direction.LEFT);
         } else if (range(angle, 202.5, 247.5)) {
             startAngle = 180.0f;
+            notifyDirection(Direction.UP_AND_LEFT);
         } else if (range(angle, 247.5, 292.5)) {
             startAngle = 225.0f;
+            notifyDirection(Direction.UP);
         } else if (range(angle, 292.5, 337.5)) {
             startAngle = 270.0f;
+            notifyDirection(Direction.UP_AND_RIGHT);
         }
         invalidate();
+    }
+
+    private void notifyDirection(Direction direction) {
+        if (directionChangeListener != null) {
+            directionChangeListener.onDirectChange(direction);
+        }
     }
 
     private boolean range(double value, double min, double max) {
@@ -169,5 +196,24 @@ public class DirectionView extends RockerView {
             return true;
         }
         return false;
+    }
+
+    /**
+     *
+     * @param directionChangeListener
+     */
+    public void setDirectionChangeListener(DirectionChangeListener directionChangeListener) {
+        this.directionChangeListener = directionChangeListener;
+    }
+
+    /**
+     *
+     */
+    public interface DirectionChangeListener {
+
+        /**
+         * @param direction
+         */
+        void onDirectChange(Direction direction);
     }
 }
