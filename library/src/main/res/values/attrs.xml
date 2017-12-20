@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RockerView">
-        <attr name="edge_radius" format="integer"/>
+        <attr name="edge_radius" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="JoystickView">
         <attr name="edge_radius"/>
-        <attr name="stick_radius" format="integer" />
+        <attr name="stick_radius" format="dimension" />
         <attr name="stick_color" format="color" />
     </declare-styleable>
     <declare-styleable name="DirectionView">
         <attr name="edge_radius" />
         <attr name="indicator_color" format="color"/>
-        <attr name="button_side_width" format="integer"/>
-        <attr name="button_outside_circle_radius" format="integer"/>
+        <attr name="button_side_width" format="dimension"/>
+        <attr name="button_outside_circle_radius" format="dimension"/>
     </declare-styleable>
 </resources>

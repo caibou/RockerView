@@ -10,11 +10,14 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * @author caibou
  */
 public class DirectionView extends RockerView {
+
+    private static final String TAG = "DirectionView";
 
     private static final int INSIDE_CIRCLE = 30;
     private static final int INDICATOR_SWEEP_ANGLE = 90;
@@ -58,9 +61,9 @@ public class DirectionView extends RockerView {
 
     private void initializeData(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DirectionView);
-        edgeRadius = typedArray.getInt(R.styleable.DirectionView_edge_radius, 200);
-        int buttonRadius = typedArray.getInt(R.styleable.DirectionView_button_outside_circle_radius, 180);
-        sideLength = typedArray.getInt(R.styleable.DirectionView_button_side_width, 120);
+        int buttonRadius = typedArray.getDimensionPixelSize(R.styleable.DirectionView_button_outside_circle_radius, 180);
+        edgeRadius = typedArray.getDimensionPixelSize(R.styleable.DirectionView_edge_radius, 200);
+        sideLength = typedArray.getDimensionPixelSize(R.styleable.DirectionView_button_side_width, 120);
         indicatorColor = typedArray.getColor(R.styleable.DirectionView_indicator_color, Color.GREEN);
         typedArray.recycle();
 
@@ -157,28 +160,28 @@ public class DirectionView extends RockerView {
     }
 
     private void updateIndicator(double angle) {
-        if (range(angle, 337.5, 360) || range(angle, 0, 22.5)) {
+        if (Utils.range(angle, 337.5, 360) || Utils.range(angle, 0, 22.5)) {
             startAngle = 315.0f;
             notifyDirection(Direction.RIGHT);
-        } else if (range(angle, 22.5, 67.5)) {
+        } else if (Utils.range(angle, 22.5, 67.5)) {
             startAngle = 0.0f;
             notifyDirection(Direction.DOWN_AND_RIGHT);
-        } else if (range(angle, 67.5, 112.5)) {
+        } else if (Utils.range(angle, 67.5, 112.5)) {
             startAngle = 45.0f;
             notifyDirection(Direction.DOWN);
-        } else if (range(angle, 112.5, 157.5)) {
+        } else if (Utils.range(angle, 112.5, 157.5)) {
             startAngle = 90.0f;
             notifyDirection(Direction.DOWN_AND_LEFT);
-        } else if (range(angle, 157.5, 202.5)) {
+        } else if (Utils.range(angle, 157.5, 202.5)) {
             startAngle = 135.0f;
             notifyDirection(Direction.LEFT);
-        } else if (range(angle, 202.5, 247.5)) {
+        } else if (Utils.range(angle, 202.5, 247.5)) {
             startAngle = 180.0f;
             notifyDirection(Direction.UP_AND_LEFT);
-        } else if (range(angle, 247.5, 292.5)) {
+        } else if (Utils.range(angle, 247.5, 292.5)) {
             startAngle = 225.0f;
             notifyDirection(Direction.UP);
-        } else if (range(angle, 292.5, 337.5)) {
+        } else if (Utils.range(angle, 292.5, 337.5)) {
             startAngle = 270.0f;
             notifyDirection(Direction.UP_AND_RIGHT);
         }
@@ -191,28 +194,24 @@ public class DirectionView extends RockerView {
         }
     }
 
-    private boolean range(double value, double min, double max) {
-        if (min < value && value <= max) {
-            return true;
-        }
-        return false;
-    }
-
     /**
+     * Register a callback to be invoked when the direction changed.
      *
-     * @param directionChangeListener
+     * @param directionChangeListener The callback that will run.
      */
     public void setDirectionChangeListener(DirectionChangeListener directionChangeListener) {
         this.directionChangeListener = directionChangeListener;
     }
 
     /**
-     *
+     * Interface definition for a callback to be invoked when The direction changed.
      */
     public interface DirectionChangeListener {
 
         /**
-         * @param direction
+         * Called when direction changed.
+         *
+         * @param direction The direction of the center to finger.
          */
         void onDirectChange(Direction direction);
     }
