@@ -15,14 +15,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        JoystickView joystickView = findViewById(R.id.joystick_control);
         tvAngle = findViewById(R.id.tv_angle);
 
+        JoystickView joystickView = findViewById(R.id.joystick_control);
         joystickView.setAngleUpdateListener(new JoystickView.OnAngleUpdateListener() {
             @Override
             public void onAngleUpdate(double angle, int action) {
-                tvAngle.setText(getString(R.string.angle, angle));
+                if (action == JoystickView.ACTION_RELEASE){
+                    tvAngle.setText("");
+                } else {
+                    tvAngle.setText(getString(R.string.angle, angle));
+                }
             }
         });
 

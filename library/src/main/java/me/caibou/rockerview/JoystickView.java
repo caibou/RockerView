@@ -50,7 +50,7 @@ public class JoystickView extends RockerView {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.JoystickView);
         edgeRadius = typedArray.getDimensionPixelSize(R.styleable.JoystickView_edge_radius, 200);
         stickRadius = typedArray.getDimensionPixelSize(R.styleable.JoystickView_stick_radius, edgeRadius / 2);
-        stickBallColor = typedArray.getDimensionPixelSize(R.styleable.JoystickView_stick_color,
+        stickBallColor = typedArray.getColor(R.styleable.JoystickView_stick_color,
                 getResources().getColor(R.color.stick_default_color));
         typedArray.recycle();
 

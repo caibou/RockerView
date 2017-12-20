@@ -40,7 +40,7 @@ public abstract class RockerView extends View {
 
     private void initializeData(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RockerView);
-        radius = typedArray.getInt(R.styleable.RockerView_edge_radius, 200);
+        radius = typedArray.getDimensionPixelSize(R.styleable.RockerView_edge_radius, 200);
         typedArray.recycle();
 
         centerPoint.x = radius;
