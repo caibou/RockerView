@@ -4,7 +4,7 @@
 
 ###JoystickView
 
-<img src="/art/JoystickView.gif" style="zoom:30%" />
+<img src="art/JoystickView.gif" width=216/><img src="art/DirectionView.gif" width=216/>
 
 ```xml
 <me.caibou.rockerview.JoystickView
@@ -29,7 +29,7 @@
 
 ### DirectionView
 
-<img src="/art/DirectionView.gif" style="zoom:30%" />
+![](/art/DirectionView.gif){:width="360px" height="640px"}
 
 ```xml
 <me.caibou.rockerview.DirectionView
@@ -49,3 +49,23 @@
 ```
 
 其中edge_radius表示外边框的半径，button_outside_circle_radius是方向按钮外切圆的半径，button_side_width是方向按钮的边长，indicator_color是手指按下之后指示器的颜色。
+
+
+
+## License
+
+```
+Copyright 2017 drakeet.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
