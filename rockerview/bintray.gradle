@@ -1,0 +1,74 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = VERSION_NAME
+group = GROUP  // 组名
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+
+            project {
+
+                packaging POM_PACKAGING
+                // Add your description here
+                name POM_DESCRIPTION //项目描述
+                url POM_SITE_URL
+                // Set your license
+                licenses {
+                    license {
+                        name POM_LICENCE_NAME
+                        url POM_LICENCE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID    //填写的一些基本信息
+                        name POM_DEVELOPER_NAME
+                    }
+                }
+                scm {
+                    connection POM_GIT_URL
+                    developerConnection POM_GIT_URL
+                    url POM_SITE_URL
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = POM_REPO_NAME // 上传到中央仓库的名称
+        name = POM_NAME // 上传到jcenter 的项目名称
+        desc = POM_DESCRIPTION // 项目描述
+        websiteUrl = POM_SITE_URL
+        vcsUrl = POM_GIT_URL
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+
+}

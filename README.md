@@ -1,10 +1,30 @@
 # RockerView
 
-## 快速开始
+这是一个游戏手柄方向键的自定义View。
+
+<img src="art/JoystickView.gif" alt="JoystickView" width=250>  <img src="art/DirectionView.gif" alt="DirectionView" width=250/>
+
+  
+
+## 开始
+
+Gradle 3.0及以上
+
+```
+implementation 'me.caibou.android:rockerview:1.0.0'
+```
+
+Gradle 3.0以下
+
+```
+compile 'me.caibou.android:rockerview:1.0.0'
+```
+
+  
+
+##使用
 
 ###JoystickView
-
-<img src="art/JoystickView.gif" width=216/><img src="art/DirectionView.gif" width=216/>
 
 ```xml
 <me.caibou.rockerview.JoystickView
@@ -21,15 +41,33 @@
         />
 ```
 
-其中edge_radius表示外边框的半径，stick_color表示摇杆的颜色
+####属性
+
+* edge_radius:外边框的半径
+* stick_color:摇杆的颜色
 
 
 
+####设置角度改变回调
 
+```java
+joystickView.setAngleUpdateListener(new JoystickView.OnAngleUpdateListener() {
+  	@Override
+    public void onAngleUpdate(double angle, int action) {
+    	if (action == JoystickView.ACTION_RELEASE){
+        	tvAngle.setText("");
+        } else {
+            tvAngle.setText(getString(R.string.angle, angle));
+        }
+    }
+});
+```
+
+
+
+ 
 
 ### DirectionView
-
-![](/art/DirectionView.gif){:width="360px" height="640px"}
 
 ```xml
 <me.caibou.rockerview.DirectionView
@@ -48,14 +86,34 @@
 		/>
 ```
 
-其中edge_radius表示外边框的半径，button_outside_circle_radius是方向按钮外切圆的半径，button_side_width是方向按钮的边长，indicator_color是手指按下之后指示器的颜色。
+#### 属性
+
+* edge_radius:外边框的半径
+* button_outside_circle_radius:方向按钮外切圆的半径
+* button_side_width:方向按钮的边长
+* indicator_color:手指按下之后指示器的颜色
 
 
+
+####设置方向改变回调
+
+```java
+directionView.setDirectionChangeListener(new DirectionView.DirectionChangeListener() {
+	@Override
+    public void onDirectChange(DirectionView.Direction direction) {
+    	tvAngle.setText(direction.toString());
+    }
+});
+```
+
+   
+
+ 
 
 ## License
 
 ```
-Copyright 2017 drakeet.
+Copyright 2017 caibou.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

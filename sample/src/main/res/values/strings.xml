@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">JoystickView</string>
+    <string name="app_name">RockerView</string>
     <string name="angle">%1$.0f°</string>
 </resources>
