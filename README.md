@@ -55,7 +55,7 @@ joystickView.setAngleUpdateListener(new JoystickView.OnAngleUpdateListener() {
   	@Override
     public void onAngleUpdate(double angle, int action) {
     	if (action == JoystickView.ACTION_RELEASE){
-        	tvAngle.setText("");
+	    tvAngle.setText("");
         } else {
             tvAngle.setText(getString(R.string.angle, angle));
         }
