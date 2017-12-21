@@ -22,9 +22,9 @@ compile 'me.caibou.android:rockerview:1.0.0'
 
   
 
-##使用
+## 使用
 
-###JoystickView
+### JoystickView
 
 ```xml
 <me.caibou.rockerview.JoystickView
@@ -41,14 +41,14 @@ compile 'me.caibou.android:rockerview:1.0.0'
         />
 ```
 
-####属性
+#### 属性
 
 * edge_radius:外边框的半径
 * stick_color:摇杆的颜色
 
 
 
-####设置角度改变回调
+#### 设置角度改变回调
 
 ```java
 joystickView.setAngleUpdateListener(new JoystickView.OnAngleUpdateListener() {
@@ -95,7 +95,7 @@ joystickView.setAngleUpdateListener(new JoystickView.OnAngleUpdateListener() {
 
 
 
-####设置方向改变回调
+#### 设置方向改变回调
 
 ```java
 directionView.setDirectionChangeListener(new DirectionView.DirectionChangeListener() {
