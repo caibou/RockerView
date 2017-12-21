@@ -79,11 +79,11 @@ joystickView.setAngleUpdateListener(new JoystickView.OnAngleUpdateListener() {
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         
-		app:edge_radius="65dp"
+	app:edge_radius="65dp"
         app:button_outside_circle_radius="60dp"
         app:button_side_width="40dp"
-		app:indicator_color="#f52504"
-		/>
+	app:indicator_color="#f52504"
+	/>
 ```
 
 #### 属性
