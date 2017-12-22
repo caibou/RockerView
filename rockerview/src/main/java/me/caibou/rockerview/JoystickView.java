@@ -16,6 +16,7 @@ import android.util.AttributeSet;
  */
 public class JoystickView extends RockerView {
 
+    private Region invalidRegion = new Region();
     private Region ballRegion = new Region();
     private Path stickEdgePath = new Path();
     private Path stickBallPath = new Path();
@@ -66,6 +67,13 @@ public class JoystickView extends RockerView {
         Path rockerRulePath = new Path();
         rockerRulePath.addCircle(center.x, center.y, dr, Path.Direction.CW);
         ballRegion.setPath(rockerRulePath, rockerRegion);
+
+        int invalidRadius = edgeRadius / 3;
+        Region eventInvalidRegion = new Region(center.x - invalidRadius, center.y - invalidRadius,
+                center.x + invalidRadius, center.y + invalidRadius);
+        Path eventInvalidPath = new Path();
+        eventInvalidPath.addCircle(center.x, center.y, invalidRadius, Path.Direction.CW);
+        invalidRegion.setPath(eventInvalidPath, eventInvalidRegion);
     }
 
     @Override
@@ -123,13 +131,17 @@ public class JoystickView extends RockerView {
     @Override
     protected void actionDown(float x, float y, double angle) {
         updateStickPos(x, y);
-        updateAngle(angle, ACTION_PRESSED);
+        if (!invalidRegion.contains((int)x, (int)y)){
+            updateAngle(angle, ACTION_PRESSED);
+        }
     }
 
     @Override
     protected void actionMove(float x, float y, double angle) {
         updateStickPos(x, y);
-        updateAngle(angle, ACTION_MOVE);
+        if (!invalidRegion.contains((int)x, (int)y)){
+            updateAngle(angle, ACTION_MOVE);
+        }
     }
 
     @Override

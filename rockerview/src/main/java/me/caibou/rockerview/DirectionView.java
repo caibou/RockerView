@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class DirectionView extends RockerView {
     private float startAngle = 337.5f;
     private int indicatorColor;
 
+    private Region invalidRegion = new Region();
     private Point centerPoint = new Point();
 
     private Paint paint = new Paint();
@@ -75,6 +77,13 @@ public class DirectionView extends RockerView {
 
         indicatorRectF.set(centerPoint.x - INSIDE_CIRCLE, centerPoint.y - INSIDE_CIRCLE,
                 centerPoint.x + INSIDE_CIRCLE, centerPoint.y + INSIDE_CIRCLE);
+
+        int invalidRadius = edgeRadius / 3;
+        Region eventInvalidRegion = new Region(centerPoint.x - invalidRadius, centerPoint.y - invalidRadius,
+                centerPoint.x + invalidRadius, centerPoint.y + invalidRadius);
+        Path eventInvalidPath = new Path();
+        eventInvalidPath.addCircle(centerPoint.x, centerPoint.y, invalidRadius, Path.Direction.CW);
+        invalidRegion.setPath(eventInvalidPath, eventInvalidRegion);
     }
 
     @Override
@@ -140,12 +149,16 @@ public class DirectionView extends RockerView {
     @Override
     protected void actionDown(float x, float y, double angle) {
         pressedStatus = true;
-        updateIndicator(angle);
+        if (!invalidRegion.contains((int)x, (int)y)){
+            updateIndicator(angle);
+        }
     }
 
     @Override
     protected void actionMove(float x, float y, double angle) {
-        updateIndicator(angle);
+        if (!invalidRegion.contains((int)x, (int)y)){
+            updateIndicator(angle);
+        }
     }
 
     @Override
