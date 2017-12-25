@@ -18,8 +18,6 @@ import android.util.Log;
  */
 public class DirectionView extends RockerView {
 
-    private static final String TAG = "DirectionView";
-
     private static final int INSIDE_CIRCLE = 30;
     private static final int INDICATOR_SWEEP_ANGLE = 90;
 

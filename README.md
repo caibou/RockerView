@@ -1,5 +1,7 @@
 # RockerView
 
+[ ![Download](https://api.bintray.com/packages/caibou/android-library/RockerView/images/download.svg) ](https://bintray.com/caibou/android-library/RockerView/_latestVersion)
+
 这是一个游戏手柄方向键的自定义View。
 
 <img src="art/JoystickView.gif" alt="JoystickView" width=250>  <img src="art/DirectionView.gif" alt="DirectionView" width=250/>
