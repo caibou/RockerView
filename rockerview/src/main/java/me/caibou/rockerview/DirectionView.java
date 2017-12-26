@@ -28,13 +28,13 @@ public class DirectionView extends RockerView {
     private boolean pressedStatus = false;
     private int edgeRadius, buttonRadius, sideWidth;
     private int indicatorColor;
-    private float startAngle = 337.5f;
+    private float startAngle;
 
     private Region invalidRegion = new Region();
     private Point centerPoint = new Point();
 
     private Paint paint = new Paint();
-    private Path edgePath, directPath, indicatorPath;
+    private Path directPath;
     private RectF indicatorRect;
 
     private DirectionChangeListener directionChangeListener;
@@ -56,21 +56,21 @@ public class DirectionView extends RockerView {
 
     private void initialAttr(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DirectionView);
-        buttonRadius = typedArray.getDimensionPixelSize(R.styleable.DirectionView_button_outside_circle_radius, 180);
+        buttonRadius = typedArray.getDimensionPixelSize(
+                R.styleable.DirectionView_button_outside_circle_radius, 180);
         edgeRadius = typedArray.getDimensionPixelSize(R.styleable.DirectionView_edge_radius, 200);
-        sideWidth = typedArray.getDimensionPixelSize(R.styleable.DirectionView_button_side_width, 120);
+        sideWidth = typedArray.getDimensionPixelSize(
+                R.styleable.DirectionView_button_side_width, 120);
         indicatorColor = typedArray.getColor(R.styleable.DirectionView_indicator_color, Color.GREEN);
         typedArray.recycle();
     }
 
     private void initialData() {
-        int sideLengthOfCenter = (int) Math.sqrt(Math.pow(buttonRadius, 2) - Math.pow(sideWidth / 2, 2));
+        int sideLengthOfCenter = (int) Math.sqrt(Math.pow(buttonRadius, 2)
+                - Math.pow(sideWidth / 2, 2));
         int sideLength = sideLengthOfCenter - sideWidth / 2;
 
         centerPoint = centerPoint();
-
-        edgePath = new Path();
-        edgePath.addCircle(centerPoint.x, centerPoint.y, edgeRadius, Path.Direction.CW);
 
         directPath = new Path();
         directPath.moveTo(-sideLengthOfCenter + centerPoint.x, -sideWidth / 2 + centerPoint.y);
@@ -91,13 +91,13 @@ public class DirectionView extends RockerView {
         indicatorRect = new RectF();
         indicatorRect.set(centerPoint.x - INSIDE_CIRCLE_RADIUS, centerPoint.y - INSIDE_CIRCLE_RADIUS,
                 centerPoint.x + INSIDE_CIRCLE_RADIUS, centerPoint.y + INSIDE_CIRCLE_RADIUS);
-        indicatorPath = new Path();
     }
 
     private void resetInvalidRegion() {
         int invalidRadius = edgeRadius / 3;
-        Region invalidRegionClip = new Region(centerPoint.x - invalidRadius, centerPoint.y - invalidRadius,
-                centerPoint.x + invalidRadius, centerPoint.y + invalidRadius);
+        Region invalidRegionClip = new Region(centerPoint.x - invalidRadius,
+                centerPoint.y - invalidRadius, centerPoint.x + invalidRadius,
+                centerPoint.y + invalidRadius);
         Path eventInvalidPath = new Path();
         eventInvalidPath.addCircle(centerPoint.x, centerPoint.y, invalidRadius, Path.Direction.CW);
         invalidRegion.setPath(eventInvalidPath, invalidRegionClip);
@@ -105,7 +105,6 @@ public class DirectionView extends RockerView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.TRANSPARENT);
         drawEdge(canvas);
         drawDirectButton(canvas);
         if (pressedStatus) {
@@ -117,7 +116,7 @@ public class DirectionView extends RockerView {
         paint.reset();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.BLACK);
-        canvas.drawPath(edgePath, paint);
+        canvas.drawCircle(centerPoint.x, centerPoint.y, edgeRadius, paint);
     }
 
     protected void drawDirectButton(Canvas canvas) {
@@ -134,9 +133,7 @@ public class DirectionView extends RockerView {
         paint.setColor(indicatorColor);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
-        indicatorPath.reset();
-        indicatorPath.addArc(indicatorRect, startAngle, INDICATOR_SWEEP_ANGLE);
-        canvas.drawPath(indicatorPath, paint);
+        canvas.drawArc(indicatorRect, startAngle, INDICATOR_SWEEP_ANGLE, false, paint);
     }
 
     @Override

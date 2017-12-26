@@ -57,7 +57,7 @@ public abstract class RockerView extends View {
 
     private double calculateAngle(float dx, float dy) {
         double degrees = Math.toDegrees(Math.atan2(dy, dx));
-        return degrees < 0 ? degrees + 360 : degrees;
+        return degrees < 0 ? Math.floor(degrees + 360) : degrees;
     }
 
     @Override
