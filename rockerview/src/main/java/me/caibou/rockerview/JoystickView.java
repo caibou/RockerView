@@ -16,19 +16,14 @@ import android.util.AttributeSet;
  */
 public class JoystickView extends RockerView {
 
-    private Region invalidRegion = new Region();
-    private Region ballRegion = new Region();
-    private Path stickEdgePath = new Path();
-    private Path stickBallPath = new Path();
+    private Region ballRegion, invalidRegion;
+    private Path stickEdgePath, stickBallPath;
 
     private Paint paint = new Paint();
-
     private Point center;
-    private float stickX, stickY;
-    private int edgeRadius;
-    private int stickRadius;
-    private int dr;
 
+    private int edgeRadius, stickRadius, dr;
+    private float stickX, stickY;
     private int stickBallColor;
 
     private OnAngleUpdateListener angleUpdateListener;
@@ -43,37 +38,44 @@ public class JoystickView extends RockerView {
 
     public JoystickView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialData(context, attrs);
-        initialStickRange();
+        initialAttr(context, attrs);
+        initialData();
     }
 
-    private void initialData(Context context, @Nullable AttributeSet attrs) {
+    private void initialAttr(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.JoystickView);
         edgeRadius = typedArray.getDimensionPixelSize(R.styleable.JoystickView_edge_radius, 200);
         stickRadius = typedArray.getDimensionPixelSize(R.styleable.JoystickView_stick_radius, edgeRadius / 2);
         stickBallColor = typedArray.getColor(R.styleable.JoystickView_stick_color,
                 getResources().getColor(R.color.stick_default_color));
         typedArray.recycle();
+    }
 
+    private void initialData() {
         center = centerPoint();
         stickX = center.x;
         stickY = center.y;
         dr = edgeRadius - stickRadius;
-    }
 
-    private void initialStickRange() {
-        Region rockerRegion = new Region(center.x - dr, center.y - dr,
+        stickEdgePath = new Path();
+        stickEdgePath.addCircle(center.x, center.y, edgeRadius, Path.Direction.CW);
+
+        stickBallPath = new Path();
+
+        Region ballRegionClip = new Region(center.x - dr, center.y - dr,
                 center.x + dr, center.y + dr);
         Path rockerRulePath = new Path();
         rockerRulePath.addCircle(center.x, center.y, dr, Path.Direction.CW);
-        ballRegion.setPath(rockerRulePath, rockerRegion);
+        ballRegion = new Region();
+        ballRegion.setPath(rockerRulePath, ballRegionClip);
 
         int invalidRadius = edgeRadius / 3;
-        Region eventInvalidRegion = new Region(center.x - invalidRadius, center.y - invalidRadius,
+        Region invalidRegionClip = new Region(center.x - invalidRadius, center.y - invalidRadius,
                 center.x + invalidRadius, center.y + invalidRadius);
         Path eventInvalidPath = new Path();
         eventInvalidPath.addCircle(center.x, center.y, invalidRadius, Path.Direction.CW);
-        invalidRegion.setPath(eventInvalidPath, eventInvalidRegion);
+        invalidRegion = new Region();
+        invalidRegion.setPath(eventInvalidPath, invalidRegionClip);
     }
 
     @Override
@@ -84,8 +86,6 @@ public class JoystickView extends RockerView {
     }
 
     protected void drawRockerEdge(Canvas canvas) {
-        stickEdgePath.reset();
-        stickEdgePath.addCircle(center.x, center.y, edgeRadius, Path.Direction.CW);
         paint.reset();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
