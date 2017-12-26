@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">RockerView</string>
     <string name="angle">%1$.0f°</string>
+
+    <string name="direction_view">DirectionView</string>
+    <string name="joystick_view">JoystickView</string>
 </resources>
