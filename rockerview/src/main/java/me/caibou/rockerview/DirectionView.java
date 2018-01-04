@@ -25,6 +25,8 @@ public class DirectionView extends RockerView {
         UP_AND_LEFT, UP_AND_RIGHT, DOWN_AND_LEFT, DOWN_AND_RIGHT
     }
 
+    private Direction currentDirection;
+
     private boolean pressedStatus = false;
     private int edgeRadius, buttonRadius, sideWidth;
     private int indicatorColor;
@@ -91,6 +93,8 @@ public class DirectionView extends RockerView {
         indicatorRect = new RectF();
         indicatorRect.set(centerPoint.x - INSIDE_CIRCLE_RADIUS, centerPoint.y - INSIDE_CIRCLE_RADIUS,
                 centerPoint.x + INSIDE_CIRCLE_RADIUS, centerPoint.y + INSIDE_CIRCLE_RADIUS);
+
+        currentDirection = Direction.NONE;
     }
 
     private void resetInvalidRegion() {
@@ -195,6 +199,15 @@ public class DirectionView extends RockerView {
         if (directionChangeListener != null) {
             directionChangeListener.onDirectChange(direction);
         }
+    }
+
+    /**
+     * Returns the current Direction.
+     *
+     * @return The current Direction.
+     */
+    public Direction getCurrentDirection(){
+        return currentDirection;
     }
 
     /**

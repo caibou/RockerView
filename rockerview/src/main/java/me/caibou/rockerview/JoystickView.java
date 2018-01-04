@@ -25,6 +25,8 @@ public class JoystickView extends RockerView {
     private float stickX, stickY;
     private int stickBallColor;
 
+    private double currentAngle;
+
     private OnAngleUpdateListener angleUpdateListener;
 
     public JoystickView(Context context) {
@@ -71,6 +73,8 @@ public class JoystickView extends RockerView {
         eventInvalidPath.addCircle(center.x, center.y, invalidRadius, Path.Direction.CW);
         invalidRegion = new Region();
         invalidRegion.setPath(eventInvalidPath, invalidRegionClip);
+
+        currentAngle = -1;
     }
 
     @Override
@@ -110,12 +114,14 @@ public class JoystickView extends RockerView {
     }
 
     private void resetStick() {
+        currentAngle = -1;
         stickX = center.x;
         stickY = center.y;
         invalidate();
     }
 
     private void updateAngle(double angle, int action) {
+        currentAngle = angle;
         if (angleUpdateListener != null) {
             angleUpdateListener.onAngleUpdate(angle, action);
         }
@@ -141,6 +147,15 @@ public class JoystickView extends RockerView {
     protected void actionUp(float x, float y, double angle) {
         resetStick();
         updateAngle(angle, ACTION_RELEASE);
+    }
+
+    /**
+     * Returns the current angle.
+     *
+     * @return The current angle, -1 represent no touch action.
+     */
+    public double getCurrentAngle(){
+        return currentAngle;
     }
 
     /**
